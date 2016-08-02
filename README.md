@@ -10,26 +10,27 @@ messages are encoded with Avro.
 import "github.com/FoxComm/metamorphosis
 ```
 
-Construct a new consumer by pointing defining a message handler, as well as the
-connection settings for Zookeeper and the Avro schema repository.  
+Construct a new consumer by creating a Consumer that connects to Zookeeper and
+the Avro schema registry.
 
 For example:
 
 ```go
 zookeeper := "localhost:2181"
 schemaRepo := "http://localhost:8081"
+
+consumer, err := metamorphosis.NewConsumer(zookeeper, schemaRepo)
+```
+
+To handle messages, define a handler and run against a topic:
+
+```go
 handler := func(message *[]byte) error {
   fmt.Println(string(message))
   return nil
 }
 
-consumer, err := metamorphosis.NewConsumer(zookeeper, schemaRepo, handler)
-```
-
-To handle messages, just run against a topic:
-
-```go
-consumer.RunTopic("my_topic")
+consumer.RunTopic("my_topic", 1, handler)
 ```
 
 ## License ##
