@@ -25,8 +25,9 @@ consumer, err := metamorphosis.NewConsumer(zookeeper, schemaRepo)
 To handle messages, define a handler and run against a topic:
 
 ```go
-handler := func(message *[]byte) error {
-  fmt.Println(string(message))
+handler := func(message AvroMessage) error {
+  bytes := message.Bytes()
+  fmt.Println(string(bytes))
   return nil
 }
 
