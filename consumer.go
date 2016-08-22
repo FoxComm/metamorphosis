@@ -19,11 +19,12 @@ type consumer struct {
 	config *go_kafka_client.ConsumerConfig
 }
 
-func NewConsumer(zookeeper string, schemaRepo string) (Consumer, error) {
+func NewConsumer(identifier string, zookeeper string, schemaRepo string) (Consumer, error) {
 	zConfig := go_kafka_client.NewZookeeperConfig()
 	zConfig.ZookeeperConnect = []string{zookeeper}
 
 	consumerConfig := go_kafka_client.DefaultConsumerConfig()
+	consumerConfig.Clientid = identifier
 	consumerConfig.AutoOffsetReset = go_kafka_client.SmallestOffset
 	consumerConfig.Coordinator = go_kafka_client.NewZookeeperCoordinator(zConfig)
 	consumerConfig.NumWorkers = 1
