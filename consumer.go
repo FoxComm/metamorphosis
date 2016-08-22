@@ -10,6 +10,13 @@ import (
 
 // Consumer represents the interface for consuming data from a Kafka topic.
 type Consumer interface {
+	// SetClientID sets the identifier used to uniquely describe the consumer.
+	SetClientID(clientID string)
+
+	// SetGroupID sets the identifier used to uniquely describe the group to
+	// which this consumer belongs.
+	SetGroupID(groupID string)
+
 	// RunTopic runs a message handler against a topic and partition. The handler
 	// gets called each time a new message is received.
 	RunTopic(topic string, partition int, handler Handler)
@@ -19,12 +26,11 @@ type consumer struct {
 	config *go_kafka_client.ConsumerConfig
 }
 
-func NewConsumer(identifier string, zookeeper string, schemaRepo string) (Consumer, error) {
+func NewConsumer(zookeeper string, schemaRepo string) (Consumer, error) {
 	zConfig := go_kafka_client.NewZookeeperConfig()
 	zConfig.ZookeeperConnect = []string{zookeeper}
 
 	consumerConfig := go_kafka_client.DefaultConsumerConfig()
-	consumerConfig.Clientid = identifier
 	consumerConfig.AutoOffsetReset = go_kafka_client.SmallestOffset
 	consumerConfig.Coordinator = go_kafka_client.NewZookeeperCoordinator(zConfig)
 	consumerConfig.NumWorkers = 1
@@ -36,6 +42,14 @@ func NewConsumer(identifier string, zookeeper string, schemaRepo string) (Consum
 	consumerConfig.WorkerFailedAttemptCallback = defaultFailedAttemptCallback
 
 	return &consumer{config: consumerConfig}, nil
+}
+
+func (c *consumer) SetClientID(clientID string) {
+	c.config.Clientid = clientID
+}
+
+func (c *consumer) SetGroupID(groupID string) {
+	c.config.Groupid = groupID
 }
 
 func (c consumer) RunTopic(topic string, partition int, handler Handler) {
