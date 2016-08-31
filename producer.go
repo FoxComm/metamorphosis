@@ -17,7 +17,7 @@ type defaultProducer struct {
 	kafkaProducer *siestaProducer.KafkaProducer
 }
 
-func NewProducer(broker, zookeeper, schemaRegistry string) (Producer, error) {
+func NewProducer(broker, schemaRegistry string) (Producer, error) {
 	encoder := kafkaavro.NewKafkaAvroEncoder(schemaRegistry)
 
 	config := siesta.NewConnectorConfig()
