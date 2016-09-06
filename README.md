@@ -7,7 +7,7 @@ messages are encoded with Avro.
 ## Usage ##
 
 ```go
-import "github.com/FoxComm/metamorphosis
+import "github.com/FoxComm/metamorphosis"
 ```
 
 Construct a new consumer by creating a Consumer that connects to Zookeeper and
