@@ -31,7 +31,7 @@ func NewConsumer(zookeeper string, schemaRepo string) (Consumer, error) {
 	zConfig.ZookeeperConnect = []string{zookeeper}
 
 	consumerConfig := go_kafka_client.DefaultConsumerConfig()
-	consumerConfig.AutoOffsetReset = go_kafka_client.SmallestOffset
+	consumerConfig.AutoOffsetReset = go_kafka_client.LargestOffset
 	consumerConfig.Coordinator = go_kafka_client.NewZookeeperCoordinator(zConfig)
 	consumerConfig.NumWorkers = 1
 	consumerConfig.NumConsumerFetchers = 1
