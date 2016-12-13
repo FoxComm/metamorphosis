@@ -31,7 +31,7 @@ handler := func(message AvroMessage) error {
   return nil
 }
 
-consumer.RunTopic("my_topic", 1, handler)
+consumer.RunTopic("my_topic", handler)
 ```
 
 ## License ##
