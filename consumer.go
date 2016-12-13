@@ -22,9 +22,9 @@ type Consumer interface {
 	// which this consumer belongs.
 	SetGroupID(groupID string)
 
-	// RunTopic runs a message handler against a topic and partition. The handler
+	// RunTopic runs a message handler against a topic. The handler
 	// gets called each time a new message is received.
-	RunTopic(topic string, partition int, handler Handler)
+	RunTopic(topic string, handler Handler)
 }
 
 type consumer struct {
@@ -57,7 +57,7 @@ func (c *consumer) SetGroupID(groupID string) {
 	c.config.Groupid = groupID
 }
 
-func (c consumer) RunTopic(topic string, partition int, handler Handler) {
+func (c consumer) RunTopic(topic string, handler Handler) {
 	c.config.Strategy = createStrategy(handler)
 
 	kafkaConsumer := go_kafka_client.NewConsumer(c.config)
@@ -70,7 +70,7 @@ func (c consumer) RunTopic(topic string, partition int, handler Handler) {
 		kafkaConsumer.Close()
 	}()
 
-	kafkaConsumer.StartStatic(map[string]int{topic: partition})
+	kafkaConsumer.StartStatic(map[string]int{topic: 1})
 }
 
 func createStrategy(fn Handler) go_kafka_client.WorkerStrategy {
