@@ -4,6 +4,7 @@ import (
 	"os"
 	"os/signal"
 
+	"fmt"
 	"github.com/elodina/go-kafka-avro"
 	"github.com/elodina/go_kafka_client"
 )
@@ -32,6 +33,10 @@ type consumer struct {
 }
 
 func NewConsumer(zookeeper string, schemaRepo string, offsetStrategy string) (Consumer, error) {
+	if !validOffsetStrategy(offsetStrategy) {
+		return nil, fmt.Errorf("Invalid offsetStrategy value. Should be %s or %s", OffsetResetSmallest, OffsetResetLargest)
+	}
+
 	zConfig := go_kafka_client.NewZookeeperConfig()
 	zConfig.ZookeeperConnect = []string{zookeeper}
 
@@ -75,9 +80,9 @@ func (c consumer) RunTopic(topic string, handler Handler) {
 
 func createStrategy(fn Handler) go_kafka_client.WorkerStrategy {
 	return func(
-		worker *go_kafka_client.Worker,
-		message *go_kafka_client.Message,
-		taskId go_kafka_client.TaskId) go_kafka_client.WorkerResult {
+	worker *go_kafka_client.Worker,
+	message *go_kafka_client.Message,
+	taskId go_kafka_client.TaskId) go_kafka_client.WorkerResult {
 
 		record, err := newAvroMessage(message)
 		if err != nil {
@@ -98,4 +103,8 @@ func defaultFailureCallback(_ *go_kafka_client.WorkerManager) go_kafka_client.Fa
 
 func defaultFailedAttemptCallback(_ *go_kafka_client.Task, _ go_kafka_client.WorkerResult) go_kafka_client.FailedDecision {
 	return go_kafka_client.CommitOffsetAndContinue
+}
+
+func validOffsetStrategy(strategy string) bool {
+	return strategy == OffsetResetSmallest || strategy == OffsetResetLargest
 }
