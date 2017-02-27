@@ -4,8 +4,8 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/FoxComm/go-avro"
-	"github.com/FoxComm/go_kafka_client"
+	"github.com/elodina/go-avro"
+	"github.com/elodina/go_kafka_client"
 )
 
 // AvroMessage represents a Kafka message that's been successfully decoded with

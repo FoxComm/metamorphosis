@@ -3,9 +3,9 @@ package metamorphosis
 import (
 	"fmt"
 
-	kafkaavro "github.com/FoxComm/go-kafka-avro"
-	"github.com/FoxComm/siesta"
-	siestaProducer "github.com/FoxComm/siesta-producer"
+	kafkaavro "github.com/elodina/go-kafka-avro"
+	"github.com/elodina/siesta"
+	siestaProducer "github.com/elodina/siesta-producer"
 )
 
 // Producer is the interface for emitting data to a Kafka topic.
