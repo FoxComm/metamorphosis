@@ -5,8 +5,9 @@ import (
 	"os/signal"
 
 	"fmt"
-	"github.com/elodina/go-kafka-avro"
-	"github.com/elodina/go_kafka_client"
+
+	"github.com/FoxComm/go-kafka-avro"
+	"github.com/FoxComm/go_kafka_client"
 )
 
 const (
@@ -80,9 +81,9 @@ func (c consumer) RunTopic(topic string, handler Handler) {
 
 func createStrategy(fn Handler) go_kafka_client.WorkerStrategy {
 	return func(
-	worker *go_kafka_client.Worker,
-	message *go_kafka_client.Message,
-	taskId go_kafka_client.TaskId) go_kafka_client.WorkerResult {
+		worker *go_kafka_client.Worker,
+		message *go_kafka_client.Message,
+		taskId go_kafka_client.TaskId) go_kafka_client.WorkerResult {
 
 		record, err := newAvroMessage(message)
 		if err != nil {
